@@ -252,7 +252,8 @@ GET /api/health - Health check
             print(" 6. bmdb create-model User")
             print(" 7. bmdb add-fields User name:string email:string:unique password:string")
             print(" 8. bmdb generate")
-            print(" 9. python run.py")
+            print(" 9. bmdb migrate-schema")
+            print(" 10. python run.py")
             
 
     def _copy_template_files(self, source, dest):
