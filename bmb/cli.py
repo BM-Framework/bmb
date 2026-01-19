@@ -103,131 +103,131 @@ class BMBCLI:
             if project_path.exists():
                 shutil.rmtree(project_path)
             return False
-        def _create_project_files(self, project_path, project_name):
-                """Create additional project-specific files"""
-                # Create .env.example
-                env_content = """# Configuration BMDB
-        DB_CONNECTION=sqlite:///./database.db
+    def _create_project_files(self, project_path, project_name):
+            """Create additional project-specific files"""
+            # Create .env.example
+            env_content = """# Configuration BMDB
+    DB_CONNECTION=sqlite:///./database.db
 
-        # Configuration BMB
-        SECRET_KEY=change-this-secret-key
-        FLASK_ENV=development
-        DEBUG=True
+    # Configuration BMB
+    SECRET_KEY=change-this-secret-key
+    FLASK_ENV=development
+    DEBUG=True
 
-        # JWT
-        JWT_SECRET=change-this-jwt-secret
-        JWT_EXPIRATION_HOURS=24
+    # JWT
+    JWT_SECRET=change-this-jwt-secret
+    JWT_EXPIRATION_HOURS=24
 
-        # CORS
-        CORS_ORIGINS=http://localhost:3000,http://localhost:5173
+    # CORS
+    CORS_ORIGINS=http://localhost:3000,http://localhost:5173
 
-        # Server
-        HOST=0.0.0.0
-        PORT=5000
+    # Server
+    HOST=0.0.0.0
+    PORT=5000
 
-        # BMDB Options
-        AUTO_LOAD_MODELS=True
-        CREATE_TABLES_ON_START=True
-        """
-                (project_path / ".env.example").write_text(env_content)
-                self.print_success("Créé: .env.example")
-                
-                # Create .gitignore
-                gitignore_content = """__pycache__/
-        *.py[cod]
-        .Python
-        venv/
-        .env
-        .env.local
-        *.db
-        *.sqlite
-        *.log
-        .vscode/
-        .idea/
-        .DS_Store
-        """
-                (project_path / ".gitignore").write_text(gitignore_content)
-                self.print_success("Créé: .gitignore")
-                
-                # Create requirements.txt
-                requirements_content = """Flask>=3.0.0
-        flask-cors>=4.0.0
-        PyJWT>=2.8.0
-        python-dotenv>=1.0.0
-        Werkzeug>=3.0.1
-        bmdb>=1.0.0
-        """
-                (project_path / "requirements.txt").write_text(requirements_content)
-                self.print_success("Créé: requirements.txt")
-                
-                # Create run.py
-                run_content = f'''"""
-        Point d'entrée de l'application {project_name}
-        """
+    # BMDB Options
+    AUTO_LOAD_MODELS=True
+    CREATE_TABLES_ON_START=True
+    """
+            (project_path / ".env.example").write_text(env_content)
+            self.print_success("Créé: .env.example")
+            
+            # Create .gitignore
+            gitignore_content = """__pycache__/
+    *.py[cod]
+    .Python
+    venv/
+    .env
+    .env.local
+    *.db
+    *.sqlite
+    *.log
+    .vscode/
+    .idea/
+    .DS_Store
+    """
+            (project_path / ".gitignore").write_text(gitignore_content)
+            self.print_success("Créé: .gitignore")
+            
+            # Create requirements.txt
+            requirements_content = """Flask>=3.0.0
+    flask-cors>=4.0.0
+    PyJWT>=2.8.0
+    python-dotenv>=1.0.0
+    Werkzeug>=3.0.1
+    bmdb>=1.0.0
+    """
+            (project_path / "requirements.txt").write_text(requirements_content)
+            self.print_success("Créé: requirements.txt")
+            
+            # Create run.py
+            run_content = f'''"""
+    Point d'entrée de l'application {project_name}
+    """
 
-        from bmb import create_app
-        from bmb.config import AppConfig
+    from bmb import create_app
+    from bmb.config import AppConfig
 
-        if __name__ == '__main__':
-        app = create_app()
-        
-        print("\\n" + "="*60)
-        print(f"🚀 {project_name} - BMB Backend")
-        print("="*60)
-        print(f"🌐 Serveur: http://{{AppConfig.HOST}}:{{AppConfig.PORT}}")
-        print("="*60 + "\\n")
-        
-        app.run(
-                host=AppConfig.HOST,
-                port=AppConfig.PORT,
-                debug=AppConfig.DEBUG
-        )
-        '''
-                (project_path / "run.py").write_text(run_content)
-                self.print_success("Créé: run.py")
-                
-                # Create README.md
-                readme_content = f"""# {project_name}
+    if __name__ == '__main__':
+    app = create_app()
+    
+    print("\\n" + "="*60)
+    print(f"🚀 {project_name} - BMB Backend")
+    print("="*60)
+    print(f"🌐 Serveur: http://{{AppConfig.HOST}}:{{AppConfig.PORT}}")
+    print("="*60 + "\\n")
+    
+    app.run(
+            host=AppConfig.HOST,
+            port=AppConfig.PORT,
+            debug=AppConfig.DEBUG
+    )
+    '''
+            (project_path / "run.py").write_text(run_content)
+            self.print_success("Créé: run.py")
+            
+            # Create README.md
+            readme_content = f"""# {project_name}
 
-        Projet créé avec BMB Backend Framework
+    Projet créé avec BMB Backend Framework
 
-        ## Installation
+    ## Installation
 
-        ```bash
-        # Créer un environnement virtuel
-        python -m venv venv
-        source venv/bin/activate  # Windows: venv\\Scripts\\activate
+    ```bash
+    # Créer un environnement virtuel
+    python -m venv venv
+    source venv/bin/activate  # Windows: venv\\Scripts\\activate
 
-        # Installer les dépendances
-        pip install -r requirements.txt
+    # Installer les dépendances
+    pip install -r requirements.txt
 
-        # Configuration
-        ```bash
-        # Copier le fichier d'exemple
+    # Configuration
+    ```bash
+    # Copier le fichier d'exemple
 cp .env.example .env
 
 # Éditer la configuration
 nano .env
-        ```
+    ```
 
-        # Créer les modèles BMDB
-        ```bash
-        # Créer un modèle User
+    # Créer les modèles BMDB
+    ```bash
+    # Créer un modèle User
 bmdb create-model User
 bmdb add-fields User name:string email:string:unique password:string age:integer
 
 # Générer les modèles Python
 bmdb generate
-        ```
+    ```
 
-        # Lancer l'application
-        ```bash
+    # Lancer l'application
+    ```bash
 python run.py
-        ```
-        L'API sera disponible sur http://localhost:5000
+    ```
+    L'API sera disponible sur http://localhost:5000
 
-        #Documentation API
-        POST /api/auth/register - Inscription
+    #Documentation API
+    POST /api/auth/register - Inscription
 
 POST /api/auth/login - Connexion
 
@@ -237,22 +237,22 @@ GET /api/users - Liste utilisateurs (protégé)
 
 GET /api/health - Health check
 """
-                (project_path / "README.md").write_text(readme_content)
-                self.print_success("Créé: README.md")
+            (project_path / "README.md").write_text(readme_content)
+            self.print_success("Créé: README.md")
 
-        def _print_next_steps(self, project_name):
-                """Print next steps for the user"""
-                print(f"\n{self.colors.CYAN}Prochaines étapes:{self.colors.ENDC}")
-                print(f" 1. cd {project_name}")
-                print(" 2. python -m venv venv")
-                print(" 3. source venv/bin/activate")
-                print(" 4. pip install -r requirements.txt")
-                print(" 5. cp .env.example .env")
-                print(" 6. bmdb create-model User")
-                print(" 7. bmdb add-fields User name:string email:string:unique password:string")
-                print(" 8. bmdb generate")
-                print(" 9. python run.py")
-                
+    def _print_next_steps(self, project_name):
+            """Print next steps for the user"""
+            print(f"\n{self.colors.CYAN}Prochaines étapes:{self.colors.ENDC}")
+            print(f" 1. cd {project_name}")
+            print(" 2. python -m venv venv")
+            print(" 3. source venv/bin/activate")
+            print(" 4. pip install -r requirements.txt")
+            print(" 5. cp .env.example .env")
+            print(" 6. bmdb create-model User")
+            print(" 7. bmdb add-fields User name:string email:string:unique password:string")
+            print(" 8. bmdb generate")
+            print(" 9. python run.py")
+            
 
     def _copy_template_files(self, source, dest):
         """Copy template files recursively"""
