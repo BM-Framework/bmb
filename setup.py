@@ -17,6 +17,10 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/BM-Framework/bmb",
     packages=find_packages(),
+    include_package_data=True,  # This is crucial
+    package_data={
+        'bmb': ['project_template/**/*'],
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

@@ -55,3 +55,6 @@ bmb = "bmb.cli:main"
 
 [tool.setuptools]
 packages = {find = {}}
+
+[tool.setuptools.package-data]
+"bmb" = ["project_template/**/*"]

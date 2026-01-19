@@ -4,6 +4,8 @@ CLI BMB - Ligne de commande pour générer des projets et endpoints
 
 import argparse
 from pathlib import Path
+import shutil
+from importlib import resources
 
 
 class BMBCLIColors:
@@ -47,208 +49,58 @@ class BMBCLI:
         print(f"{self.colors.WARNING}⚠ {text}{self.colors.ENDC}")
     
     def init_project(self, project_name):
-        """
-        Initialiser un nouveau projet BMB
-        """
+        """Initialiser un nouveau projet BMB en copiant le template"""
         self.print_header(f"Initialisation du projet: {project_name}")
         
         project_path = Path.cwd() / project_name
         
-        # Vérifier si le projet existe déjà
         if project_path.exists():
             self.print_error(f"Le dossier '{project_name}' existe déjà")
             return False
         
         try:
-            # Créer la structure du projet
-            self.print_info("Création de la structure...")
+            self.print_info("Copie du template de projet...")
             
-            # Dossiers principaux
-            dirs_to_create = [
-                project_path,
-                project_path / "bmb" / "config",
-                project_path / "bmb" / "routes",
-                project_path / "bmb" / "utils",
-                project_path / "bmb" / "middleware",
-                project_path / "bmdb" / "models" / "generated",
-                project_path / "tests",
-            ]
+            # Find the package location and the template folder
+            try:
+                # This is the modern, reliable way to access package files
+                template_root = resources.files('bmb') / 'project_template'
+                # Fallback for development: check if we are in the source tree
+                if not template_root.exists():
+                    # This assumes you run the CLI from the repo root during dev
+                    fallback_path = Path(__file__).parent.parent.parent / 'project_template'
+                    if fallback_path.exists():
+                        template_root = fallback_path
+                    else:
+                        raise FileNotFoundError("Template folder not found in package.")
+            except Exception as e:
+                self.print_error(f"Impossible de localiser le template du projet: {e}")
+                return False
             
-            for dir_path in dirs_to_create:
-                dir_path.mkdir(parents=True, exist_ok=True)
-                self.print_success(f"Créé: {dir_path.relative_to(project_path)}")
+            # Copy the entire template
+            shutil.copytree(template_root, project_path)
+            self.print_success(f"Template copié vers: {project_path}")
             
-            # Créer les fichiers __init__.py
-            init_files = [
-                project_path / "bmb" / "__init__.py",
-                project_path / "bmb" / "config" / "__init__.py",
-                project_path / "bmb" / "routes" / "__init__.py",
-                project_path / "bmb" / "utils" / "__init__.py",
-                project_path / "bmb" / "middleware" / "__init__.py",
-                project_path / "bmdb" / "__init__.py",
-                project_path / "bmdb" / "models" / "__init__.py",
-                project_path / "tests" / "__init__.py",
-            ]
+            # Update files that need project-specific names (e.g., README)
+            readme_path = project_path / "README.md"
+            if readme_path.exists():
+                content = readme_path.read_text()
+                content = content.replace("{project_name}", project_name)
+                readme_path.write_text(content)
             
-            for init_file in init_files:
-                init_file.touch()
-            
-            # Créer .env.example
-            env_content = """# Configuration BMDB
-DB_CONNECTION=sqlite:///./database.db
-
-# Configuration BMB
-SECRET_KEY=change-this-secret-key
-FLASK_ENV=development
-DEBUG=True
-
-# JWT
-JWT_SECRET=change-this-jwt-secret
-JWT_EXPIRATION_HOURS=24
-
-# CORS
-CORS_ORIGINS=http://localhost:3000,http://localhost:5173
-
-# Server
-HOST=0.0.0.0
-PORT=5000
-
-# BMDB Options
-AUTO_LOAD_MODELS=True
-CREATE_TABLES_ON_START=True
-"""
-            (project_path / ".env.example").write_text(env_content)
-            self.print_success("Créé: .env.example")
-            
-            # Créer .gitignore
-            gitignore_content = """__pycache__/
-*.py[cod]
-.Python
-venv/
-.env
-.env.local
-*.db
-*.sqlite
-*.log
-.vscode/
-.idea/
-.DS_Store
-"""
-            (project_path / ".gitignore").write_text(gitignore_content)
-            self.print_success("Créé: .gitignore")
-            
-            # Créer requirements.txt
-            requirements_content = """Flask>=3.0.0
-flask-cors>=4.0.0
-PyJWT>=2.8.0
-python-dotenv>=1.0.0
-Werkzeug>=3.0.1
-bmdb>=1.0.0
-"""
-            (project_path / "requirements.txt").write_text(requirements_content)
-            self.print_success("Créé: requirements.txt")
-            
-            # Créer run.py
-            run_content = f"""\"\"\"
-Point d'entrée de l'application {project_name}
-\"\"\"
-
-from bmb import create_app
-from bmb.config import AppConfig
-
-if __name__ == '__main__':
-    app = create_app()
-    
-    print("\\n" + "="*60)
-    print(f"🚀 {project_name} - BMB Backend")
-    print("="*60)
-    print(f"🌐 Serveur: http://{{AppConfig.HOST}}:{{AppConfig.PORT}}")
-    print("="*60 + "\\n")
-    
-    app.run(
-        host=AppConfig.HOST,
-        port=AppConfig.PORT,
-        debug=AppConfig.DEBUG
-    )
-"""
-            (project_path / "run.py").write_text(run_content)
-            self.print_success("Créé: run.py")
-            
-            # Créer README.md
-            readme_content = f"""# {project_name}
-
-Projet créé avec BMB Backend Framework
-
-## Installation
-
-\`\`\`bash
-# Créer un environnement virtuel
-python -m venv venv
-source venv/bin/activate  # Windows: venv\\Scripts\\activate
-
-# Installer les dépendances
-pip install -r requirements.txt
-\`\`\`
-
-## Configuration
-
-\`\`\`bash
-# Copier le fichier d'exemple
-cp .env.example .env
-
-# Éditer la configuration
-nano .env
-\`\`\`
-
-## Créer les modèles BMDB
-
-\`\`\`bash
-# Créer un modèle User
-bmdb create-model User
-bmdb add-fields User name:string email:string:unique password:string age:integer
-
-# Générer les modèles Python
-bmdb generate
-\`\`\`
-
-## Lancer l'application
-
-\`\`\`bash
-python run.py
-\`\`\`
-
-L'API sera disponible sur http://localhost:5000
-
-## Documentation API
-
-- \`POST /api/auth/register\` - Inscription
-- \`POST /api/auth/login\` - Connexion
-- \`GET /api/auth/me\` - Profil (protégé)
-- \`GET /api/users\` - Liste utilisateurs (protégé)
-- \`GET /api/health\` - Health check
-"""
-            (project_path / "README.md").write_text(readme_content)
-            self.print_success("Créé: README.md")
-            
-            # Message de succès
-            self.print_success(f"\n✨ Projet '{project_name}' créé avec succès!")
-            
-            print(f"\n{self.colors.CYAN}Prochaines étapes:{self.colors.ENDC}")
-            print(f"  1. cd {project_name}")
-            print("  2. python -m venv venv")
-            print("  3. source venv/bin/activate")
-            print("  4. pip install -r requirements.txt")
-            print("  5. cp .env.example .env")
-            print("  6. bmdb create-model User")
-            print("  7. bmdb add-fields User name:string email:string:unique password:string")
-            print("  8. bmdb generate")
-            print("  9. python run.py")
+            # Final success message
+            self.print_success(f"\n✨ Projet '{project_name}' créé avec succès à partir du template !")
+            self._print_next_steps(project_name)  # You can keep your existing step-by-step guide
             
             return True
             
         except Exception as e:
             self.print_error(f"Erreur lors de la création du projet: {e}")
+            # Clean up on error
+            if project_path.exists():
+                shutil.rmtree(project_path)
             return False
+
     
     def generate_crud(self, model_name):
         """
