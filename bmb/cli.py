@@ -161,29 +161,28 @@ class BMBCLI:
             self.print_success("Créé: requirements.txt")
             
             # Create run.py - Version avec caractères Unicode
-            run_content = f'''
-    """
-    Point d'entrée de l'application {project_name}
-    """
+            run_content = f'''"""
+Point d'entrée de l'application {project_name}
+"""
 
-    from bmb import create_app
-    from bmb.config import AppConfig
+from {project_name}.app import create_app
+from {project_name}.config.app_config import AppConfig
 
-    if __name__ == '__main__':
-        app = create_app()
-        
-        print("\\n" + "="*60)
-        print(f"[BMB] {project_name} - Backend Framework")
-        print("="*60)
-        print(f"Server: http://{{AppConfig.HOST}}:{{AppConfig.PORT}}")
-        print("="*60 + "\\n")
-        
-        app.run(
-            host=AppConfig.HOST,
-            port=AppConfig.PORT,
-            debug=AppConfig.DEBUG
-        )
-        '''
+if __name__ == '__main__':
+    app = create_app()
+    
+    print("\\n" + "="*60)
+    print("[BMB] {project_name} - Backend Framework")
+    print("="*60)
+    print(f"Server: http://{{AppConfig.HOST}}:{{AppConfig.PORT}}")
+    print("="*60 + "\\n")
+    
+    app.run(
+        host=AppConfig.HOST,
+        port=AppConfig.PORT,
+        debug=AppConfig.DEBUG
+    )
+    '''
             (project_path / "run.py").write_text(run_content)
             self.print_success("Créé: run.py")
             
