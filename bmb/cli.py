@@ -245,7 +245,7 @@ GET /api/health - Health check
             print(f"\n{self.colors.CYAN}Prochaines étapes:{self.colors.ENDC}")
             print(f" 1. cd {project_name}")
             print(" 2. python -m venv venv")
-            print(" 3. source venv/bin/activate (in Mac/linux) | venv\Scripts\activate (in windows)")
+            print(" 3. source venv/bin/activate (in Mac/linux) | venv/Scripts/activate (in windows)")
             print(" 4. python.exe -m pip install --upgrade pip (Optionel)")
             print(" 5. pip install -r requirements.txt")
             print(" 6. cp .env.example .env")
