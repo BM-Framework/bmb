@@ -257,7 +257,7 @@ GET /api/health - Health check
             
 
     def _copy_template_files(self, source, dest):
-        """Copy template files recursively + clean relative imports"""
+        """Copy template files recursively + clean relative imports (skip __init__.py)"""
         for item in source.iterdir():
             if item.is_dir():
                 new_dir = dest / item.name
@@ -270,8 +270,7 @@ GET /api/health - Health check
                 target = dest / item.name
                 shutil.copy2(item, target)
                 
-                # Clean relative imports only in .py files
-                if item.suffix == '.py':
+                if item.suffix == '.py' and item.name != '__init__.py':
                     content = target.read_text(encoding='utf-8')
                     content = content.replace('from .', 'from ')
                     target.write_text(content, encoding='utf-8')
