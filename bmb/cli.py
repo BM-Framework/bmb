@@ -165,8 +165,8 @@ CREATE_TABLES_ON_START=True
 Point d'entree de l'application {project_name}
 """
 
-from {project_name}.app import create_app
-from {project_name}.config.app_config import AppConfig
+from app import create_app
+from config.app_config import AppConfig
 
 if __name__ == '__main__':
     app = create_app()
@@ -257,16 +257,27 @@ GET /api/health - Health check
             
 
     def _copy_template_files(self, source, dest):
-        """Copy template files recursively"""
+        """Copy template files recursively + clean relative imports"""
         for item in source.iterdir():
             if item.is_dir():
                 new_dir = dest / item.name
                 new_dir.mkdir(exist_ok=True)
                 self._copy_template_files(item, new_dir)
             else:
-                shutil.copy2(item, dest / item.name)
+                if item.suffix == '.pyc':
+                    continue
+                    
+                target = dest / item.name
+                shutil.copy2(item, target)
+                
+                # Clean relative imports only in .py files
+                if item.suffix == '.py':
+                    content = target.read_text(encoding='utf-8')
+                    content = content.replace('from .', 'from ')
+                    target.write_text(content, encoding='utf-8')
+                
                 self.print_success(f"  Créé: {item.name}")
-        
+    
     def generate_crud(self, model_name):
         """
         Générer automatiquement un CRUD pour un modèle
