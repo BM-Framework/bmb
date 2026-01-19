@@ -107,28 +107,28 @@ class BMBCLI:
             """Create additional project-specific files"""
             # Create .env.example
             env_content = """# Configuration BMDB
-    DB_CONNECTION=sqlite:///./database.db
+DB_CONNECTION=sqlite:///./database.db
 
-    # Configuration BMB
-    SECRET_KEY=change-this-secret-key
-    FLASK_ENV=development
-    DEBUG=True
+# Configuration BMB
+SECRET_KEY=change-this-secret-key
+FLASK_ENV=development
+DEBUG=True
 
-    # JWT
-    JWT_SECRET=change-this-jwt-secret
-    JWT_EXPIRATION_HOURS=24
+# JWT
+JWT_SECRET=change-this-jwt-secret
+JWT_EXPIRATION_HOURS=24
 
-    # CORS
-    CORS_ORIGINS=http://localhost:3000,http://localhost:5173
+# CORS
+CORS_ORIGINS=http://localhost:3000,http://localhost:5173
 
-    # Server
-    HOST=0.0.0.0
-    PORT=5000
+# Server
+HOST=0.0.0.0
+PORT=5000
 
-    # BMDB Options
-    AUTO_LOAD_MODELS=True
-    CREATE_TABLES_ON_START=True
-    """
+# BMDB Options
+AUTO_LOAD_MODELS=True
+CREATE_TABLES_ON_START=True
+"""
             (project_path / ".env.example").write_text(env_content)
             self.print_success("Créé: .env.example")
             
