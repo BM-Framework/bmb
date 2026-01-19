@@ -245,14 +245,15 @@ GET /api/health - Health check
             print(f"\n{self.colors.CYAN}Prochaines étapes:{self.colors.ENDC}")
             print(f" 1. cd {project_name}")
             print(" 2. python -m venv venv")
-            print(" 3. source venv/bin/activate")
-            print(" 4. pip install -r requirements.txt")
-            print(" 5. cp .env.example .env")
-            print(" 6. bmdb create-model User")
-            print(" 7. bmdb add-fields User name:string email:string:unique password:string")
-            print(" 8. bmdb generate")
-            print(" 9. bmdb migrate-schema")
-            print(" 10. python run.py")
+            print(" 3. source venv/bin/activate (in Mac/linux) | venv\Scripts\activate (in windows)")
+            print(" 4. python.exe -m pip install --upgrade pip (Optionel)")
+            print(" 5. pip install -r requirements.txt")
+            print(" 6. cp .env.example .env")
+            print(" 7. bmdb create-model User")
+            print(" 8. bmdb add-fields User name:string email:string:unique password:string")
+            print(" 9. bmdb generate")
+            print(" 10. bmdb migrate-schema")
+            print(" 11. python run.py")
             
 
     def _copy_template_files(self, source, dest):
