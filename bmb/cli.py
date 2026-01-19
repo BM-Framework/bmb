@@ -61,46 +61,59 @@ class BMBCLI:
         try:
             self.print_info("Copie du template de projet...")
             
-            # Find the package location and the template folder
+            # Use importlib.resources to access the template
             try:
-                # This is the modern, reliable way to access package files
+                # Access the template folder inside the package
                 template_root = resources.files('bmb') / 'project_template'
-                # Fallback for development: check if we are in the source tree
-                if not template_root.exists():
-                    # This assumes you run the CLI from the repo root during dev
-                    fallback_path = Path(__file__).parent.parent.parent / 'project_template'
-                    if fallback_path.exists():
-                        template_root = fallback_path
-                    else:
-                        raise FileNotFoundError("Template folder not found in package.")
+                
+                # Create a temporary directory to extract files
+                import tempfile
+                with tempfile.TemporaryDirectory() as tmp_dir:
+                    tmp_path = Path(tmp_dir)
+                    
+                    # Copy all files from template to temp directory
+                    self._copy_template_files(template_root, tmp_path)
+                    
+                    # Copy from temp directory to project
+                    shutil.copytree(tmp_path, project_path)
+                    
             except Exception as e:
                 self.print_error(f"Impossible de localiser le template du projet: {e}")
-                return False
+                # Fallback for development
+                dev_template = Path(__file__).parent / 'project_template'
+                if dev_template.exists():
+                    self.print_info("Utilisation du template de développement...")
+                    shutil.copytree(dev_template, project_path)
+                else:
+                    raise
             
-            # Copy the entire template
-            shutil.copytree(template_root, project_path)
             self.print_success(f"Template copié vers: {project_path}")
             
-            # Update files that need project-specific names (e.g., README)
-            readme_path = project_path / "README.md"
-            if readme_path.exists():
-                content = readme_path.read_text()
-                content = content.replace("{project_name}", project_name)
-                readme_path.write_text(content)
+            # Create additional project files
+            self._create_project_files(project_path, project_name)
             
             # Final success message
             self.print_success(f"\n✨ Projet '{project_name}' créé avec succès à partir du template !")
-            self._print_next_steps(project_name)  # You can keep your existing step-by-step guide
+            self._print_next_steps(project_name)
             
             return True
             
         except Exception as e:
             self.print_error(f"Erreur lors de la création du projet: {e}")
-            # Clean up on error
             if project_path.exists():
                 shutil.rmtree(project_path)
             return False
 
+def _copy_template_files(self, source, dest):
+    """Copy template files recursively"""
+    for item in source.iterdir():
+        if item.is_dir():
+            new_dir = dest / item.name
+            new_dir.mkdir(exist_ok=True)
+            self._copy_template_files(item, new_dir)
+        else:
+            shutil.copy2(item, dest / item.name)
+            self.print_success(f"  Créé: {item.name}")
     
     def generate_crud(self, model_name):
         """
