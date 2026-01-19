@@ -1,103 +1,377 @@
-# ⚙️ BMB - Bouchettoy Marouan Backend
+# BMB - Backend Framework
 
-**Backend Rapide & Génération d'API pour le BM Framework**
+🚀 **BMB** est un framework backend Flask qui utilise **BMDB** (ORM Python) pour créer des API RESTful en quelques minutes.
 
-[![Retour au Framework Principal](https://img.shields.io/badge/BM-Framework-black)](https://github.com/bm-framework)
-[![Built with BMDB](https://img.shields.io/badge/Powered_by-BMDB-blue)](https://github.com/bm-framework/bmdb)
+## ✨ Fonctionnalités
 
-**BMB** est le module backend du **BM Framework**. Basé sur **Flask**, il transforme vos modèles **BMDB** en **API RESTful sécurisée et documentée en quelques secondes**, avec un système d'authentification JWT prêt à l'emploi.
+### 🔐 Authentification JWT complète
 
-## ✨ Pourquoi BMB ?
+- Inscription utilisateur (`POST /api/auth/register`)
+- Connexion (`POST /api/auth/login`)
+- Profil utilisateur (`GET /api/auth/me`)
+- Renouvellement de token (`POST /api/auth/refresh`)
+- Déconnexion (`POST /api/auth/logout`)
 
-*   **⚡ Génération d'API CRUD instantanée** à partir de vos modèles BMDB.
-*   **🔐 Authentification JWT prête** (register/login/logout/refresh) sans configuration.
-*   **🧩 Architecture modulaire** (controllers, services, middlewares) pour une codebase propre.
-*   **🚀 CLI dédiée** pour générer endpoints, services et tests unitaires.
-*   **🤝 Conçu pour BMDB** : L'intégration parfaite avec votre couche de données.
+### 👥 CRUD Utilisateurs avec BMDB
 
-## 📦 Installation
+Utilise **toutes les méthodes BMDB** :
+
+- ✅ `save()` - Créer/modifier
+- ✅ `delete()` - Supprimer
+- ✅ `get(id)` - Récupérer par ID
+- ✅ `all()` - Lister tous
+- ✅ `filter(**kwargs)` - Filtrer
+- ✅ `first(**kwargs)` - Premier résultat
+- ✅ `count(**kwargs)` - Compter
+- ✅ `to_dict()` - Sérialiser en JSON
+
+### 📊 Endpoints disponibles
+
+#### Authentification
+
+```crul
+POST   /api/auth/register    - Inscription
+POST   /api/auth/login       - Connexion
+GET    /api/auth/me          - Profil (protégé)
+POST   /api/auth/refresh     - Renouveler token (protégé)
+POST   /api/auth/logout      - Déconnexion (protégé)
+```
+
+#### Utilisateurs
+
+```crul
+GET    /api/users            - Liste avec filtres & pagination
+GET    /api/users/:id        - Détails utilisateur
+PUT    /api/users/:id        - Modifier utilisateur
+DELETE /api/users/:id        - Supprimer utilisateur
+GET    /api/users/search     - Rechercher par email
+GET    /api/users/stats      - Statistiques
+```
+
+#### Monitoring
+
+```crul
+GET    /api/health           - Health check
+GET    /api/info             - Informations app
+```
+
+## 🚀 Installation rapide
+
+### 1. Installer BMB
 
 ```bash
 pip install bmb
 ```
-Pré-requis : Avoir un projet BMDB configuré (bmdb init).
 
-🚀 Créer une API Complète en 2 Commandes
-Assurez-vous d'avoir un modèle BMDB. Exemple avec bmdb create-model Article title:String content:text.
-
-Générez l'API CRUD complète pour ce modèle :
+### 2. Créer les modèles BMDB
 
 ```bash
-bmb create:endpoint /api/articles --model=Article --crud
+# Créer le fichier models.bmdb
+bmdb create-model User
+bmdb add-fields User name:string email:string:unique password:string age:integer
+
+# Générer les modèles Python
+bmdb generate
 ```
-Démarrez le serveur :
+
+### 3. Configuration
 
 ```bash
-bmb start
-```
-Votre API est maintenant disponible ! 🎉
-```
-GET /api/articles - Liste tous les articles
+# Copier le fichier d'exemple
+cp .env.example .env
 
-POST /api/articles - Crée un article
-
-GET /api/articles/<id> - Récupère un article
-
-etc.
+# Éditer .env avec votre configuration
+nano .env
 ```
 
-🛠️ Référence de la CLI bmb
-Commande	Description	Exemple
+Configuration minimale dans `.env` :
+
+```env
+DB_CONNECTION=sqlite:///./database.db
+SECRET_KEY=your-secret-key
+JWT_SECRET=your-jwt-secret
+```
+
+### 4. Lancer l'application
+
+```python
+# run.py
+from bmb import create_app
+
+app = create_app()
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
 ```bash
-bmb start	Lance le serveur de développement Flask.	bmb start --port=4000
-bmb create:endpoint <path>	Génère un nouveau contrôleur et ses routes.	bmb create:endpoint /api/users --model=User
-bmb create:service <name>	Génère une classe de logique métier réutilisable.	bmb create:service PaymentService
-bmb create:middleware <name>	Génère un middleware (ex: pour le logging).	bmb create:middleware AuthMiddleware
-bmb test	Exécute la suite de tests du projet.	bmb test --coverage
-bmb make:auth	Régénère les fichiers d'authentification (si personnalisation).	bmb make:auth
+python run.py
 ```
-🏗️ Structure de Projet Générée
+
+🎉 Votre API est prête sur `http://localhost:5000` !
+
+## 📁 Structure du projet
+
 ```text
-votre_projet/
-├── app.py                  # Point d'entrée Flask principal
-├── controllers/            # Contrôleurs générés (ex: ArticleController.py)
-├── services/               # Logique métier (ex: ArticleService.py)
-├── middlewares/            # Middlewares (auth, logging)
-├── models/                 **Vos modèles BMDB (générés par `bmdb`)**
-└── tests/                  # Tests unitaires
+mon-projet/
+│
+├── bmdb/                      # Modèles BMDB
+│   ├── models/
+│   │   ├── generated/
+│   │   │   └── models.py      # Généré par BMDB
+│   │   └── models.bmdb        # Définition des modèles
+│   └── __init__.py
+│
+├── bmb/                       # Framework BMB
+│   ├── __init__.py
+│   ├── app.py                 # Factory Flask
+│   ├── models_loader.py       # Chargement modèles BMDB
+│   ├── database.py            # Gestionnaire DB
+│   │
+│   ├── config/                # Configuration séparée
+│   │   ├── __init__.py
+│   │   ├── app_config.py      # Config Flask/JWT
+│   │   └── bmdb_config.py     # Config BMDB
+│   │
+│   ├── routes/                # Routes (blueprints)
+│   │   ├── __init__.py
+│   │   ├── auth.py            # Authentification
+│   │   ├── users.py           # CRUD utilisateurs
+│   │   └── health.py          # Monitoring
+│   │
+│   ├── utils/                 # Utilitaires
+│   │   ├── __init__.py
+│   │   ├── jwt_utils.py       # Gestion JWT
+│   │   ├── validators.py      # Validateurs
+│   │   └── responses.py       # Réponses API
+│   │
+│   └── middleware/            # Middleware
+│       ├── __init__.py
+│       ├── logging.py         # Logging requests
+│       └── error_handlers.py  # Gestion erreurs
+│
+├── .env                       # Configuration (ne pas commiter)
+├── .env.example               # Exemple de configuration
+├── requirements.txt           # Dépendances
+├── setup.py                   # Installation
+└── run.py                     # Point d'entrée
 ```
-🔐 Authentification Intégrée
-BMB inclut un système d'authentification complet utilisant les JSON Web Tokens (JWT).
 
-Endpoints automatiquement disponibles :
-```
-POST /api/auth/register - Inscription d'un nouvel utilisateur.
+## 🔧 Architecture modulaire
 
-POST /api/auth/login - Connexion et réception d'un token JWT.
+### Séparation des configurations
 
-POST /api/auth/logout - Déconnexion (invalidation côté client).
+```python
+# Config Flask (bmb/config/app_config.py)
+class AppConfig:
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET')
+    # ...
 
-GET /api/auth/me - Récupère le profil de l'utilisateur connecté.
-
-POST /api/auth/refresh - Obtient un nouveau token d'accès.
-```
-Le décorateur @login_required est disponible pour protéger vos routes.
-
-🔌 Intégration avec le Frontend (BMF)
-Les API générées par BMB sont conçues pour être consommées directement par BMF, le module frontend du framework.
-
-Exemple de workflow :
-```
-bmdb create-model Product ...
-
-bmb create:endpoint /api/products --model=Product --crud
-
-bmf create:page Admin/Products --endpoint=/api/products
+# Config BMDB (bmb/config/bmdb_config.py)
+class BMDBConfig:
+    DB_CONNECTION = os.getenv('DB_CONNECTION')
+    MODELS_DIR = Path.cwd() / "bmdb" / "models" / "generated"
+    # ...
 ```
 
-➡️ Vous avez une interface de gestion des produits fonctionnelle.
+### Chargement dynamique des modèles
 
-➡️ Découvrir BMF, le module frontend
+```python
+from bmb import load_models
 
-📄 Licence
-MIT © Marouan Bouchettoy
+# Charger tous les modèles BMDB
+models = load_models()
+
+# Accéder à un modèle
+User = models['User']
+Post = models['Post']
+
+# Utiliser les méthodes BMDB
+users = User.all()
+user = User.get(1)
+new_user = User(name="Alice").save()
+```
+
+### Factory Pattern pour Flask
+
+```python
+from bmb import create_app
+
+# Créer l'application avec configuration
+app = create_app()
+
+# Les modèles sont automatiquement chargés
+# La DB est automatiquement initialisée
+```
+
+## 💡 Exemples d'utilisation
+
+### Inscription d'un utilisateur
+
+```bash
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "password": "secure123",
+    "age": 25
+  }'
+```
+
+Réponse :
+
+```json
+{
+  "message": "Utilisateur créé avec succès",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "user": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "age": 25
+    }
+  }
+}
+```
+
+### Connexion
+
+```bash
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "alice@example.com",
+    "password": "secure123"
+  }'
+```
+
+### Récupérer son profil
+
+```bash
+curl http://localhost:5000/api/auth/me \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Lister les utilisateurs (avec filtres)
+
+```bash
+curl "http://localhost:5000/api/users?age=25&page=1&page_size=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Rechercher un utilisateur
+
+```bash
+curl "http://localhost:5000/api/users/search?email=alice@example.com" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## 🎯 Points forts
+
+✅ **Installation ultra-rapide** - `pip install bmb`  
+✅ **Configuration simple** - Un seul fichier `.env`  
+✅ **Authentification JWT incluse** - Prête à l'emploi  
+✅ **CRUD automatique** - Utilise BMDB ORM  
+✅ **Architecture modulaire** - Code propre et organisé  
+✅ **Chargement dynamique** - Modèles chargés automatiquement  
+✅ **Pagination intégrée** - Pages de résultats  
+✅ **Validation des données** - Sécurité renforcée  
+✅ **Gestion d'erreurs** - Messages clairs  
+✅ **Logging automatique** - Suivi des requêtes  
+✅ **Health checks** - Monitoring inclus  
+
+## 🔌 Intégration avec BMDB
+
+BMB utilise **intelligemment** toutes les fonctionnalités de BMDB :
+
+```python
+# Dans vos routes
+from bmb import load_models
+
+models = load_models()
+User = models['User']
+
+# Utiliser les méthodes BMDB
+user = User.get(user_id)           # Récupérer par ID
+users = User.all()                 # Tous les utilisateurs
+filtered = User.filter(age=25)     # Filtrer
+first = User.first(email="x@y.z")  # Premier résultat
+count = User.count(age=25)         # Compter
+user_dict = user.to_dict()         # Sérialiser
+
+# Créer/Modifier
+new_user = User(name="Bob").save()
+user.age = 30
+user.save()
+
+# Supprimer
+user.delete()
+```
+
+## 🗄️ Bases de données supportées
+
+Via BMDB, BMB supporte :
+
+- **PostgreSQL** - Production recommandée
+- **MySQL** - Alternative solide
+- **SQLite** - Développement rapide
+
+## 🛠️ Développement
+
+### Tests
+
+```bash
+# Installer les dépendances de dev
+pip install -e ".[dev]"
+
+# Lancer les tests
+pytest
+
+# Avec couverture
+pytest --cov=bmb
+```
+
+### Linting
+
+```bash
+# Formater le code
+black bmb/
+
+# Vérifier le style
+flake8 bmb/
+
+# Type checking
+mypy bmb/
+```
+
+## 📦 Publier sur PyPI
+
+```bash
+# Build
+python setup.py sdist bdist_wheel
+
+# Upload
+twine upload dist/*
+```
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! Ouvrez une issue ou un PR sur GitHub.
+
+## 📄 Licence
+
+MIT License - Voir LICENSE pour plus de détails.
+
+## 🔗 Liens
+
+- **GitHub**: <https://github.com/BM-Framework/bmb>
+- **PyPI**: <https://pypi.org/project/bmb>
+- **BMDB**: <https://github.com/BM-Framework/bmdb>
+- **Documentation**: <https://bm-framework.github.io>
+
+---
+
+Développé avec ❤️ par **BM Framework | Marouan Bouchettoy**

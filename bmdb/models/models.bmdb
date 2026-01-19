@@ -1,0 +1,7 @@
+models:
+  User:
+    fields:
+      name: String
+      email: String @unique
+      password: String
+      age: Integer
