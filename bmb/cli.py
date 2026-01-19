@@ -162,7 +162,7 @@ CREATE_TABLES_ON_START=True
             
             # Create run.py - Version avec caractères Unicode
             run_content = f'''"""
-Point d'entrée de l'application {project_name}
+Point d'entree de l'application {project_name}
 """
 
 from {project_name}.app import create_app
