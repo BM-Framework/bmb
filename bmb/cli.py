@@ -214,7 +214,7 @@ nano .env
     ```bash
     # Créer un modèle User
 bmdb create-model User
-bmdb add-fields User name:string email:string:unique password:string age:integer
+bmdb add-fields User name String email String --unique email password String
 
 # Générer les modèles Python
 bmdb generate
