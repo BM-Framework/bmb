@@ -1,5 +1,5 @@
 """
-CLI BMB - Ligne de commande pour générer des projets et endpoints
+CLI BMB - Ligne de commande pour generer des projets et endpoints
 """
 
 import argparse
@@ -21,13 +21,13 @@ class BMBCLIColors:
 
 
 class BMBCLI:
-    """CLI BMB pour générer des projets et endpoints"""
+    """CLI BMB pour generer des projets et endpoints"""
     
     def __init__(self):
         self.colors = BMBCLIColors()
     
     def print_header(self, text):
-        """Afficher un header coloré"""
+        """Afficher un header colore"""
         print(f"\n{self.colors.HEADER}{self.colors.BOLD}{'='*60}")
         print(f"  {text}")
         print(f"{'='*60}{self.colors.ENDC}\n")
@@ -55,7 +55,7 @@ class BMBCLI:
         project_path = Path.cwd() / project_name
         
         if project_path.exists():
-            self.print_error(f"Le dossier '{project_name}' existe déjà")
+            self.print_error(f"Le dossier '{project_name}' existe dejà")
             return False
         
         try:
@@ -82,24 +82,24 @@ class BMBCLI:
                 # Fallback for development
                 dev_template = Path(__file__).parent / 'project_template'
                 if dev_template.exists():
-                    self.print_info("Utilisation du template de développement...")
+                    self.print_info("Utilisation du template de developpement...")
                     shutil.copytree(dev_template, project_path)
                 else:
                     raise
             
-            self.print_success(f"Template copié vers: {project_path}")
+            self.print_success(f"Template copie vers: {project_path}")
             
             # Create additional project files
             self._create_project_files(project_path, project_name)
             
             # Final success message
-            self.print_success(f"\n✨ Projet '{project_name}' créé avec succès à partir du template !")
+            self.print_success(f"\n✨ Projet '{project_name}' cree avec succès à partir du template !")
             self._print_next_steps(project_name)
             
             return True
             
         except Exception as e:
-            self.print_error(f"Erreur lors de la création du projet: {e}")
+            self.print_error(f"Erreur lors de la creation du projet: {e}")
             if project_path.exists():
                 shutil.rmtree(project_path)
             return False
@@ -130,7 +130,7 @@ AUTO_LOAD_MODELS=True
 CREATE_TABLES_ON_START=True
 """
             (project_path / ".env.example").write_text(env_content)
-            self.print_success("Créé: .env.example")
+            self.print_success("Cree: .env.example")
             
             # Create .gitignore
             gitignore_content = """__pycache__/
@@ -147,7 +147,7 @@ CREATE_TABLES_ON_START=True
     .DS_Store
     """
             (project_path / ".gitignore").write_text(gitignore_content)
-            self.print_success("Créé: .gitignore")
+            self.print_success("Cree: .gitignore")
             
             # Create requirements.txt
             requirements_content = """Flask>=3.0.0
@@ -159,7 +159,7 @@ bmdb>=1.2.0
 git+https://github.com/BM-Framework/bmb.git
     """
             (project_path / "requirements.txt").write_text(requirements_content)
-            self.print_success("Créé: requirements.txt")
+            self.print_success("Cree: requirements.txt")
             
             # Create run.py - Version avec caractères Unicode
             run_content = f'''"""
@@ -185,21 +185,21 @@ if __name__ == '__main__':
     )
     '''
             (project_path / "run.py").write_text(run_content)
-            self.print_success("Créé: run.py")
+            self.print_success("Cree: run.py")
             
             # Create README.md
             readme_content = f"""# {project_name}
 
-    Projet créé avec BMB Backend Framework
+    Projet cree avec BMB Backend Framework
 
     ## Installation
 
     ```bash
-    # Créer un environnement virtuel
+    # Creer un environnement virtuel
     python -m venv venv
     source venv/bin/activate  # Windows: venv\\Scripts\\activate
 
-    # Installer les dépendances
+    # Installer les dependances
     pip install -r requirements.txt
 
     # Configuration
@@ -207,17 +207,17 @@ if __name__ == '__main__':
     # Copier le fichier d'exemple
 cp .env.example .env
 
-# Éditer la configuration
+# editer la configuration
 nano .env
     ```
 
-    # Créer les modèles BMDB
+    # Creer les modèles BMDB
     ```bash
-    # Créer un modèle User
+    # Creer un modèle User
 bmdb create-model User
 bmdb add-fields User name String email String --unique email password String
 
-# Générer les modèles Python
+# Generer les modèles Python
 bmdb generate
     ```
 
@@ -232,18 +232,18 @@ python run.py
 
 POST /api/auth/login - Connexion
 
-GET /api/auth/me - Profil (protégé)
+GET /api/auth/me - Profil (protege)
 
-GET /api/users - Liste utilisateurs (protégé)
+GET /api/users - Liste utilisateurs (protege)
 
 GET /api/health - Health check
 """
             (project_path / "README.md").write_text(readme_content)
-            self.print_success("Créé: README.md")
+            self.print_success("Cree: README.md")
 
     def _print_next_steps(self, project_name):
             """Print next steps for the user"""
-            print(f"\n{self.colors.CYAN}Prochaines étapes:{self.colors.ENDC}")
+            print(f"\n{self.colors.CYAN}Prochaines etapes:{self.colors.ENDC}")
             print(f" 1. cd {project_name}")
             print(" 2. python -m venv venv")
             print(" 3. source venv/bin/activate (in Mac/linux) | venv/Scripts/activate (in windows)")
@@ -271,13 +271,13 @@ GET /api/health - Health check
                 target = dest / item.name
                 shutil.copy2(item, target)
                 
-                self.print_success(f"  Créé: {item.name}")
+                self.print_success(f"  Cree: {item.name}")
     
     def generate_crud(self, model_name):
         """
-        Générer automatiquement un CRUD pour un modèle
+        Generer automatiquement un CRUD pour un modèle
         """
-        self.print_header(f"Génération CRUD pour: {model_name}")
+        self.print_header(f"Generation CRUD pour: {model_name}")
         
         routes_dir = Path.cwd() / "routes"
 
@@ -289,23 +289,23 @@ GET /api/health - Health check
         route_file = routes_dir / f"{model_name.lower()}.py"
         
         if route_file.exists():
-            self.print_warning(f"Le fichier {route_file.name} existe déjà")
-            overwrite = input("Voulez-vous l'écraser? (o/N): ").lower()
+            self.print_warning(f"Le fichier {route_file.name} existe dejà")
+            overwrite = input("Voulez-vous l'ecraser? (o/N): ").lower()
             if overwrite != 'o':
-                self.print_info("Opération annulée")
+                self.print_info("Operation annulee")
                 return False
         
         # Template du CRUD
         crud_template = f'''"""
 Routes CRUD pour {model_name}
-Généré automatiquement par BMB CLI
+Genere automatiquement par BMB CLI
 """
 
 from flask import Blueprint, request
 
-from ..models_loader import load_models
-from ..utils import JWTManager, success_response, error_response
-from ..config import AppConfig
+from models_loader import load_models
+from utils import JWTManager, success_response, error_response
+from config import AppConfig
 
 {model_name.lower()}_bp = Blueprint('{model_name.lower()}', __name__)
 
@@ -313,7 +313,7 @@ from ..config import AppConfig
 @{model_name.lower()}_bp.route('', methods=['GET'])
 @JWTManager.token_required
 def get_{model_name.lower()}s(current_user):
-    """Récupérer tous les {model_name}s avec pagination"""
+    """Recuperer tous les {model_name}s avec pagination"""
     try:
         models = load_models()
         {model_name} = models.get('{model_name}')
@@ -328,7 +328,7 @@ def get_{model_name.lower()}s(current_user):
             AppConfig.MAX_PAGE_SIZE
         )
         
-        # Récupérer tous les {model_name}s
+        # Recuperer tous les {model_name}s
         items = {model_name}.all()
         total_count = {model_name}.count()
         
@@ -356,7 +356,7 @@ def get_{model_name.lower()}s(current_user):
 @{model_name.lower()}_bp.route('/<int:item_id>', methods=['GET'])
 @JWTManager.token_required
 def get_{model_name.lower()}(current_user, item_id):
-    """Récupérer un {model_name} par ID"""
+    """Recuperer un {model_name} par ID"""
     try:
         models = load_models()
         {model_name} = models.get('{model_name}')
@@ -375,7 +375,7 @@ def get_{model_name.lower()}(current_user, item_id):
 @{model_name.lower()}_bp.route('', methods=['POST'])
 @JWTManager.token_required
 def create_{model_name.lower()}(current_user):
-    """Créer un nouveau {model_name}"""
+    """Creer un nouveau {model_name}"""
     try:
         data = request.get_json()
         
@@ -385,13 +385,13 @@ def create_{model_name.lower()}(current_user):
         models = load_models()
         {model_name} = models.get('{model_name}')
         
-        # Créer l'instance
+        # Creer l'instance
         new_item = {model_name}(**data)
         saved_item = new_item.save()
         
         return success_response(
             data={{'item': saved_item.to_dict()}},
-            message="{model_name} créé avec succès",
+            message="{model_name} cree avec succès",
             status=201
         )
         
@@ -449,9 +449,9 @@ def delete_{model_name.lower()}(current_user, item_id):
         success = item.delete()
         
         if success:
-            return success_response(message="{model_name} supprimé avec succès")
+            return success_response(message="{model_name} supprime avec succès")
         else:
-            return error_response("Échec de la suppression", 500)
+            return error_response("echec de la suppression", 500)
         
     except Exception as e:
         return error_response(f"Erreur: {{str(e)}}", 500)
@@ -459,18 +459,18 @@ def delete_{model_name.lower()}(current_user, item_id):
         
         try:
             route_file.write_text(crud_template)
-            self.print_success(f"CRUD généré: {route_file.name}")
+            self.print_success(f"CRUD genere: {route_file.name}")
             
             # Instructions pour enregistrer la route
             print(f"\n{self.colors.CYAN}Pour activer ce CRUD:{self.colors.ENDC}")
             print("  1. Ouvrir bmb/routes/__init__.py")
-            print(f"  2. Ajouter: from .{model_name.lower()} import {model_name.lower()}_bp")
-            print(f"  3. Ajouter: app.register_blueprint({model_name.lower()}_bp, url_prefix='/api/{model_name.lower()}s')")
+            print(f"  2. Ajouter in top: from routes.{model_name.lower()} import {model_name.lower()}_bp")
+            print(f"  3. Ajouter in blueprints = []: ({model_name.lower()}_bp, '/api/{model_name.lower()}s')")
             
             return True
             
         except Exception as e:
-            self.print_error(f"Erreur lors de la génération: {e}")
+            self.print_error(f"Erreur lors de la generation: {e}")
             return False
     
     def list_routes(self):
@@ -486,7 +486,7 @@ def delete_{model_name.lower()}(current_user, item_id):
         route_files = [f for f in routes_dir.glob("*.py") if f.name != "__init__.py"]
         
         if not route_files:
-            self.print_warning("Aucune route trouvée")
+            self.print_warning("Aucune route trouvee")
             return True
         
         for route_file in route_files:
@@ -503,8 +503,8 @@ def delete_{model_name.lower()}(current_user, item_id):
         print(f"{self.colors.BOLD}Framework:{self.colors.ENDC} Flask")
         
         print(f"\n{self.colors.BOLD}Commandes disponibles:{self.colors.ENDC}")
-        print(f"  {self.colors.CYAN}bmb init <projet>{self.colors.ENDC} - Créer un nouveau projet")
-        print(f"  {self.colors.CYAN}bmb generate-crud <Model>{self.colors.ENDC} - Générer un CRUD")
+        print(f"  {self.colors.CYAN}bmb init <projet>{self.colors.ENDC} - Creer un nouveau projet")
+        print(f"  {self.colors.CYAN}bmb generate-crud <Model>{self.colors.ENDC} - Generer un CRUD")
         print(f"  {self.colors.CYAN}bmb list-routes{self.colors.ENDC} - Lister les routes")
         print(f"  {self.colors.CYAN}bmb info{self.colors.ENDC} - Afficher les informations")
         
@@ -514,7 +514,7 @@ def delete_{model_name.lower()}(current_user, item_id):
 
 
 def main():
-    """Point d'entrée du CLI"""
+    """Point d'entree du CLI"""
     parser = argparse.ArgumentParser(
         description="BMB CLI - Backend Framework avec BMDB",
         formatter_class=argparse.RawDescriptionHelpFormatter
@@ -527,7 +527,7 @@ def main():
     init_parser.add_argument('project_name', help='Nom du projet')
     
     # Commande generate-crud
-    crud_parser = subparsers.add_parser('generate-crud', help='Générer un CRUD')
+    crud_parser = subparsers.add_parser('generate-crud', help='Generer un CRUD')
     crud_parser.add_argument('model_name', help='Nom du modèle')
     
     # Commande list-routes
