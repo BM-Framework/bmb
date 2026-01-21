@@ -279,7 +279,7 @@ GET /api/health - Health check
         self.print_header(f"Génération CRUD pour: {model_name}")
         
         routes_dir = Path.cwd() / "routes"
-        print(routes_dir)
+        self.print_success(routes_dir)
         if not routes_dir.exists():
             self.print_error("Vous devez être dans un projet BMB")
             return False
