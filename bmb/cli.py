@@ -279,7 +279,7 @@ GET /api/health - Health check
         self.print_header(f"Génération CRUD pour: {model_name}")
         
         routes_dir = Path.cwd() / "routes"
-        self.print_success(routes_dir)
+
         if not routes_dir.exists():
             self.print_error("Vous devez être dans un projet BMB")
             return False
@@ -476,7 +476,7 @@ def delete_{model_name.lower()}(current_user, item_id):
         """Lister toutes les routes disponibles"""
         self.print_header("Routes disponibles")
         
-        routes_dir = Path.cwd() / "bmb" / "routes"
+        routes_dir = Path.cwd() / "routes"
         
         if not routes_dir.exists():
             self.print_error("Vous devez être dans un projet BMB")
