@@ -250,7 +250,7 @@ GET /api/health - Health check
             print(" 5. pip install -r requirements.txt")
             print(" 6. cp .env.example .env")
             print(" 7. bmdb create-model User")
-            print(" 8. bmdb add-fields User name:string email:string:unique password:string")
+            print(" 8. bmdb add-fields User name String email String --unique email password String")
             print(" 9. bmdb generate")
             print(" 10. bmdb migrate-schema")
             print(" 11. python run.py")
@@ -269,11 +269,6 @@ GET /api/health - Health check
                     
                 target = dest / item.name
                 shutil.copy2(item, target)
-                
-                if item.suffix == '.py' and item.name != '__init__.py':
-                    content = target.read_text(encoding='utf-8')
-                    content = content.replace('from .', 'from ')
-                    target.write_text(content, encoding='utf-8')
                 
                 self.print_success(f"  Créé: {item.name}")
     

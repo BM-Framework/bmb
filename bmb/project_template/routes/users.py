@@ -6,9 +6,9 @@ Utilise toutes les méthodes BMDB: get, all, filter, first, count, save, delete
 from flask import Blueprint, request
 from werkzeug.security import generate_password_hash
 
-from ..models_loader import load_models
-from ..utils import JWTManager, Validator, success_response, error_response
-from ..config import AppConfig
+from models_loader import load_models
+from utils import JWTManager, Validator, success_response, error_response
+from config import AppConfig
 
 users_bp = Blueprint('users', __name__)
 

@@ -5,9 +5,10 @@ Routes de santé et monitoring
 from flask import Blueprint
 import datetime
 
-from ..database import Database
-from ..models_loader import ModelsLoader
-from ..utils import success_response, error_response
+from database import Database
+from models_loader import ModelsLoader
+from utils import success_response, error_response
+from config.bmdb_config import BMDBConfig
 
 health_bp = Blueprint('health', __name__)
 
@@ -75,8 +76,7 @@ def health_check():
 @health_bp.route('/info', methods=['GET'])
 def app_info():
     """Informations sur l'application"""
-    from .. import __version__
-    from ..config import BMDBConfig
+    from . import __version__
     
     info = {
         'name': 'BMB Backend Framework',

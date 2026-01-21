@@ -4,7 +4,7 @@ Fonctions utilitaires pour interagir avec BMDB
 """
 
 from contextlib import contextmanager
-from .models_loader import ModelsLoader
+from models_loader import ModelsLoader
 
 
 class Database:

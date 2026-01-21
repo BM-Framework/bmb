@@ -6,8 +6,8 @@ import jwt
 import datetime
 from functools import wraps
 from flask import request, jsonify
-from ..config import AppConfig
-from ..models_loader import load_models
+from config import AppConfig
+from models_loader import load_models
 
 
 class JWTManager:

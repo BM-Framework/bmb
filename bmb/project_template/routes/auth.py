@@ -5,8 +5,8 @@ Routes d'authentification
 from flask import Blueprint, request
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from ..models_loader import load_models
-from ..utils import JWTManager, Validator, success_response, error_response
+from models_loader import load_models
+from utils import JWTManager, Validator, success_response, error_response
 
 auth_bp = Blueprint('auth', __name__)
 

@@ -5,7 +5,7 @@ Fonction utilitaire pour importer les modèles générés par BMDB
 
 import sys
 from importlib import import_module
-from .config import BMDBConfig
+from config import BMDBConfig
 
 
 class ModelsLoader:

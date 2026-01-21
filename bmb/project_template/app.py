@@ -5,10 +5,10 @@ Factory pour créer l'application Flask BMB
 from flask import Flask
 from flask_cors import CORS
 
-from .config import AppConfig, BMDBConfig
-from .models_loader import load_models
-from .database import Database
-from .middleware import setup_logging, register_error_handlers
+from config import AppConfig, BMDBConfig
+from models_loader import load_models
+from database import Database
+from middleware import setup_logging, register_error_handlers
 
 
 def create_app(config_class=AppConfig):
@@ -59,7 +59,7 @@ def create_app(config_class=AppConfig):
     register_error_handlers(app)
     
     # Enregistrer les blueprints (routes)
-    from .routes import register_routes
+    from routes import register_routes
     register_routes(app)
     
     print("✅ Application BMB créée avec succès")
