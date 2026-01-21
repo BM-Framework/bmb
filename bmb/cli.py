@@ -156,8 +156,8 @@ PyJWT>=2.8.0
 python-dotenv>=1.0.0
 Werkzeug>=3.0.1
 bmdb>=1.2.0
-git+https://github.com/BM-Framework/bmb.git
-    """
+bmb>=1.0.0
+"""
             (project_path / "requirements.txt").write_text(requirements_content)
             self.print_success("Cree: requirements.txt")
             
