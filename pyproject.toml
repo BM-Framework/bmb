@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bmb"
-version = "1.0.0"
+version = "1.0.1"
 description = "BMB - Backend Framework utilisant BMDB ORM"
 readme = "README.md"
 requires-python = ">=3.8"
