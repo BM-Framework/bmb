@@ -33,7 +33,7 @@ class BMBCLI:
         print(f"{'='*60}{self.colors.ENDC}\n")
     
     def print_success(self, text):
-        """Afficher un message de succès"""
+        """Afficher un message de succes"""
         print(f"{self.colors.GREEN}✓ {text}{self.colors.ENDC}")
     
     def print_error(self, text):
@@ -93,7 +93,7 @@ class BMBCLI:
             self._create_project_files(project_path, project_name)
             
             # Final success message
-            self.print_success(f"\n✨ Projet '{project_name}' cree avec succès à partir du template !")
+            self.print_success(f"\n✨ Projet '{project_name}' cree avec succes à partir du template !")
             self._print_next_steps(project_name)
             
             return True
@@ -161,7 +161,7 @@ bmb>=1.0.0
             (project_path / "requirements.txt").write_text(requirements_content)
             self.print_success("Cree: requirements.txt")
             
-            # Create run.py - Version avec caractères Unicode
+            # Create run.py - Version avec caracteres Unicode
             run_content = f'''"""
 Point d'entree de l'application {project_name}
 """
@@ -211,13 +211,13 @@ cp .env.example .env
 nano .env
     ```
 
-    # Creer les modèles BMDB
+    # Creer les modeles BMDB
     ```bash
-    # Creer un modèle User
+    # Creer un modele User
 bmdb create-model User
 bmdb add-fields User name String email String --unique email password String
 
-# Generer les modèles Python
+# Generer les modeles Python
 bmdb generate
     ```
 
@@ -275,14 +275,14 @@ GET /api/health - Health check
     
     def generate_crud(self, model_name):
         """
-        Generer automatiquement un CRUD pour un modèle
+        Generer automatiquement un CRUD pour un modele
         """
         self.print_header(f"Generation CRUD pour: {model_name}")
         
         routes_dir = Path.cwd() / "routes"
 
         if not routes_dir.exists():
-            self.print_error("Vous devez être dans un projet BMB")
+            self.print_error("Vous devez etre dans un projet BMB")
             return False
         
         # Nom du fichier de route
@@ -319,7 +319,7 @@ def get_{model_name.lower()}s(current_user):
         {model_name} = models.get('{model_name}')
         
         if not {model_name}:
-            return error_response("Modèle {model_name} introuvable", 500)
+            return error_response("Modele {model_name} introuvable", 500)
         
         # Pagination
         page = int(request.args.get('page', 1))
@@ -380,7 +380,7 @@ def create_{model_name.lower()}(current_user):
         data = request.get_json()
         
         if not data:
-            return error_response("Corps de requête manquant", 400)
+            return error_response("Corps de requete manquant", 400)
         
         models = load_models()
         {model_name} = models.get('{model_name}')
@@ -391,7 +391,7 @@ def create_{model_name.lower()}(current_user):
         
         return success_response(
             data={{'item': saved_item.to_dict()}},
-            message="{model_name} cree avec succès",
+            message="{model_name} cree avec succes",
             status=201
         )
         
@@ -407,7 +407,7 @@ def update_{model_name.lower()}(current_user, item_id):
         data = request.get_json()
         
         if not data:
-            return error_response("Corps de requête manquant", 400)
+            return error_response("Corps de requete manquant", 400)
         
         models = load_models()
         {model_name} = models.get('{model_name}')
@@ -449,7 +449,7 @@ def delete_{model_name.lower()}(current_user, item_id):
         success = item.delete()
         
         if success:
-            return success_response(message="{model_name} supprime avec succès")
+            return success_response(message="{model_name} supprime avec succes")
         else:
             return error_response("echec de la suppression", 500)
         
@@ -480,7 +480,7 @@ def delete_{model_name.lower()}(current_user, item_id):
         routes_dir = Path.cwd() / "routes"
         
         if not routes_dir.exists():
-            self.print_error("Vous devez être dans un projet BMB")
+            self.print_error("Vous devez etre dans un projet BMB")
             return False
         
         route_files = [f for f in routes_dir.glob("*.py") if f.name != "__init__.py"]
@@ -528,7 +528,7 @@ def main():
     
     # Commande generate-crud
     crud_parser = subparsers.add_parser('generate-crud', help='Generer un CRUD')
-    crud_parser.add_argument('model_name', help='Nom du modèle')
+    crud_parser.add_argument('model_name', help='Nom du modele')
     
     # Commande list-routes
     subparsers.add_parser('list-routes', help='Lister les routes')

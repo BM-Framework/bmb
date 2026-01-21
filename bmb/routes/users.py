@@ -1,6 +1,6 @@
 """
 Routes CRUD pour les utilisateurs
-Utilise toutes les méthodes BMDB: get, all, filter, first, count, save, delete
+Utilise toutes les methodes BMDB: get, all, filter, first, count, save, delete
 """
 
 from flask import Blueprint, request
@@ -17,26 +17,26 @@ users_bp = Blueprint('users', __name__)
 @JWTManager.token_required
 def get_users(current_user):
     """
-    Récupérer tous les utilisateurs avec filtres et pagination
+    Recuperer tous les utilisateurs avec filtres et pagination
     
     Query params:
         - age: int (filtre par âge)
         - name: string (filtre par nom)
         - email: string (filtre par email)
-        - page: int (numéro de page, défaut: 1)
-        - page_size: int (taille de page, défaut: 20, max: 100)
+        - page: int (numero de page, defaut: 1)
+        - page_size: int (taille de page, defaut: 20, max: 100)
     """
     try:
         models = load_models()
         User = models.get('User')
         
-        # Récupérer les paramètres de filtrage
+        # Recuperer les parametres de filtrage
         filters = {}
         if request.args.get('age'):
             try:
                 filters['age'] = int(request.args.get('age'))
             except ValueError:
-                return error_response("Le paramètre 'age' doit être un entier", 400)
+                return error_response("Le parametre 'age' doit etre un entier", 400)
         
         if request.args.get('name'):
             filters['name'] = request.args.get('name')
@@ -52,7 +52,7 @@ def get_users(current_user):
                 AppConfig.MAX_PAGE_SIZE
             )
         except ValueError:
-            return error_response("Paramètres de pagination invalides", 400)
+            return error_response("Parametres de pagination invalides", 400)
         
         # Utiliser BMDB filter() ou all()
         if filters:
@@ -63,7 +63,7 @@ def get_users(current_user):
         # Compter avec BMDB count()
         total_count = User.count(**filters) if filters else User.count()
         
-        # Pagination manuelle (ou implémenter dans BMDB)
+        # Pagination manuelle (ou implementer dans BMDB)
         start = (page - 1) * page_size
         end = start + page_size
         paginated_users = users[start:end]
@@ -88,7 +88,7 @@ def get_users(current_user):
 @JWTManager.token_required
 def get_user(current_user, user_id):
     """
-    Récupérer un utilisateur par ID
+    Recuperer un utilisateur par ID
     Utilise BMDB get()
     """
     try:
@@ -125,21 +125,21 @@ def update_user(current_user, user_id):
         }
     """
     try:
-        # Vérifier les permissions
+        # Verifier les permissions
         if current_user.id != user_id:
-            return error_response("Non autorisé à modifier cet utilisateur", 403)
+            return error_response("Non autorise à modifier cet utilisateur", 403)
         
         models = load_models()
         User = models.get('User')
         
-        # Récupérer l'utilisateur avec BMDB get()
+        # Recuperer l'utilisateur avec BMDB get()
         user = User.get(user_id)
         if not user:
             return error_response("Utilisateur introuvable", 404)
         
         data = request.get_json()
         if not data:
-            return error_response("Corps de requête manquant", 400)
+            return error_response("Corps de requete manquant", 400)
         
         # Mettre à jour les champs
         if 'name' in data:
@@ -150,10 +150,10 @@ def update_user(current_user, user_id):
             if not Validator.validate_email(data['email']):
                 return error_response("Format d'email invalide", 400)
             
-            # Vérifier si l'email est déjà utilisé
+            # Verifier si l'email est dejà utilise
             existing = User.first(email=data['email'])
             if existing and existing.id != user_id:
-                return error_response("Cet email est déjà utilisé", 409)
+                return error_response("Cet email est dejà utilise", 409)
             
             user.email = data['email']
         
@@ -161,7 +161,7 @@ def update_user(current_user, user_id):
             try:
                 user.age = int(data['age'])
             except (ValueError, TypeError):
-                return error_response("L'âge doit être un entier", 400)
+                return error_response("L'âge doit etre un entier", 400)
         
         if 'password' in data:
             # Valider le mot de passe
@@ -176,7 +176,7 @@ def update_user(current_user, user_id):
         
         return success_response(
             data={'user': updated_user.to_dict()},
-            message="Utilisateur mis à jour avec succès"
+            message="Utilisateur mis à jour avec succes"
         )
         
     except Exception as e:
@@ -191,14 +191,14 @@ def delete_user(current_user, user_id):
     Utilise BMDB get() et delete()
     """
     try:
-        # Vérifier les permissions
+        # Verifier les permissions
         if current_user.id != user_id:
-            return error_response("Non autorisé à supprimer cet utilisateur", 403)
+            return error_response("Non autorise à supprimer cet utilisateur", 403)
         
         models = load_models()
         User = models.get('User')
         
-        # Récupérer l'utilisateur avec BMDB get()
+        # Recuperer l'utilisateur avec BMDB get()
         user = User.get(user_id)
         if not user:
             return error_response("Utilisateur introuvable", 404)
@@ -208,10 +208,10 @@ def delete_user(current_user, user_id):
         
         if success:
             return success_response(
-                message="Utilisateur supprimé avec succès"
+                message="Utilisateur supprime avec succes"
             )
         else:
-            return error_response("Échec de la suppression", 500)
+            return error_response("echec de la suppression", 500)
         
     except Exception as e:
         return error_response(f"Erreur: {str(e)}", 500)
@@ -230,7 +230,7 @@ def search_user(current_user):
     try:
         email = request.args.get('email')
         if not email:
-            return error_response("Paramètre 'email' requis", 400)
+            return error_response("Parametre 'email' requis", 400)
         
         models = load_models()
         User = models.get('User')
@@ -254,7 +254,7 @@ def search_user(current_user):
 def get_user_stats(current_user):
     """
     Statistiques des utilisateurs
-    Utilise BMDB count() avec différents filtres
+    Utilise BMDB count() avec differents filtres
     """
     try:
         models = load_models()
@@ -263,7 +263,7 @@ def get_user_stats(current_user):
         # Compter le total avec BMDB count()
         total_users = User.count()
         
-        # Récupérer tous les utilisateurs pour les stats détaillées
+        # Recuperer tous les utilisateurs pour les stats detaillees
         all_users = User.all()
         
         # Calculer des statistiques

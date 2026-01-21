@@ -1,6 +1,6 @@
 """
-Chargement dynamique des modèles BMDB
-Fonction utilitaire pour importer les modèles générés par BMDB
+Chargement dynamique des modeles BMDB
+Fonction utilitaire pour importer les modeles generes par BMDB
 """
 
 import sys
@@ -9,7 +9,7 @@ from .config import BMDBConfig
 
 
 class ModelsLoader:
-    """Gestionnaire de chargement des modèles BMDB"""
+    """Gestionnaire de chargement des modeles BMDB"""
     
     _loaded = False
     _models = {}
@@ -20,10 +20,10 @@ class ModelsLoader:
     @classmethod
     def load_models(cls, force_reload=False):
         """
-        Charger les modèles BMDB générés
+        Charger les modeles BMDB generes
         
         Args:
-            force_reload: Forcer le rechargement même si déjà chargé
+            force_reload: Forcer le rechargement meme si dejà charge
             
         Returns:
             dict: Dictionnaire contenant {Base, engine, SessionLocal, models...}
@@ -35,7 +35,7 @@ class ModelsLoader:
             # Valider la configuration
             BMDBConfig.validate()
             
-            # Ajouter le chemin des modèles au sys.path
+            # Ajouter le chemin des modeles au sys.path
             models_path = BMDBConfig.get_models_path()
             project_root = str(BMDBConfig.PROJECT_ROOT)
             
@@ -44,22 +44,22 @@ class ModelsLoader:
             if project_root not in sys.path:
                 sys.path.insert(0, project_root)
             
-            # Tenter d'importer les modèles
+            # Tenter d'importer les modeles
             try:
-                # Méthode 1: Import direct depuis le dossier generated
+                # Methode 1: Import direct depuis le dossier generated
                 models_module = import_module('models')
-                print(f"✅ Modèles BMDB chargés depuis: {models_path}")
+                print(f"✅ Modeles BMDB charges depuis: {models_path}")
                 
             except ImportError:
-                # Méthode 2: Import avec chemin complet
+                # Methode 2: Import avec chemin complet
                 try:
                     models_module = import_module('bmdb.models.generated.models')
-                    print("✅ Modèles BMDB chargés (chemin complet)")
+                    print("✅ Modeles BMDB charges (chemin complet)")
                 except ImportError as e:
                     raise ImportError(
-                        f"Impossible de charger les modèles BMDB.\n"
+                        f"Impossible de charger les modeles BMDB.\n"
                         f"Erreur: {e}\n"
-                        f"Assurez-vous d'avoir exécuté 'bmdb generate'"
+                        f"Assurez-vous d'avoir execute 'bmdb generate'"
                     )
             
             # Extraire les composants essentiels
@@ -68,34 +68,34 @@ class ModelsLoader:
             cls._session_local = getattr(models_module, 'SessionLocal', None)
             
             if not cls._base or not cls._engine:
-                raise ImportError("Base ou engine introuvable dans les modèles BMDB")
+                raise ImportError("Base ou engine introuvable dans les modeles BMDB")
             
-            # Charger tous les modèles (classes qui héritent de Base)
+            # Charger tous les modeles (classes qui heritent de Base)
             for attr_name in dir(models_module):
                 if attr_name.startswith('_'):
                     continue
                     
                 attr = getattr(models_module, attr_name)
                 
-                # Vérifier si c'est un modèle SQLAlchemy
+                # Verifier si c'est un modele SQLAlchemy
                 if (hasattr(attr, '__mro__') and 
                     cls._base in attr.__mro__ and 
                     attr is not cls._base):
                     cls._models[attr_name] = attr
-                    print(f"   📦 Modèle chargé: {attr_name}")
+                    print(f"   📦 Modele charge: {attr_name}")
             
             cls._loaded = True
             
-            print(f"✅ {len(cls._models)} modèle(s) BMDB chargé(s) avec succès")
+            print(f"✅ {len(cls._models)} modele(s) BMDB charge(s) avec succes")
             return cls.get_all()
             
         except Exception as e:
-            print(f"❌ Erreur lors du chargement des modèles BMDB: {e}")
+            print(f"❌ Erreur lors du chargement des modeles BMDB: {e}")
             raise
     
     @classmethod
     def get_all(cls):
-        """Retourner tous les composants chargés"""
+        """Retourner tous les composants charges"""
         if not cls._loaded:
             cls.load_models()
         
@@ -104,12 +104,12 @@ class ModelsLoader:
             'engine': cls._engine,
             'SessionLocal': cls._session_local,
             'models': cls._models,
-            **cls._models  # Ajouter les modèles directement au dictionnaire
+            **cls._models  # Ajouter les modeles directement au dictionnaire
         }
     
     @classmethod
     def get_model(cls, model_name):
-        """Récupérer un modèle spécifique par son nom"""
+        """Recuperer un modele specifique par son nom"""
         if not cls._loaded:
             cls.load_models()
         
@@ -117,42 +117,42 @@ class ModelsLoader:
     
     @classmethod
     def get_base(cls):
-        """Récupérer la classe Base de SQLAlchemy"""
+        """Recuperer la classe Base de SQLAlchemy"""
         if not cls._loaded:
             cls.load_models()
         return cls._base
     
     @classmethod
     def get_engine(cls):
-        """Récupérer l'engine SQLAlchemy"""
+        """Recuperer l'engine SQLAlchemy"""
         if not cls._loaded:
             cls.load_models()
         return cls._engine
     
     @classmethod
     def get_session(cls):
-        """Récupérer SessionLocal"""
+        """Recuperer SessionLocal"""
         if not cls._loaded:
             cls.load_models()
         return cls._session_local
     
     @classmethod
     def create_tables(cls):
-        """Créer toutes les tables si elles n'existent pas"""
+        """Creer toutes les tables si elles n'existent pas"""
         if not cls._loaded:
             cls.load_models()
         
         try:
             cls._base.metadata.create_all(cls._engine)
-            print("✅ Tables créées avec succès")
+            print("✅ Tables creees avec succes")
             return True
         except Exception as e:
-            print(f"❌ Erreur lors de la création des tables: {e}")
+            print(f"❌ Erreur lors de la creation des tables: {e}")
             return False
     
     @classmethod
     def list_models(cls):
-        """Lister tous les modèles disponibles"""
+        """Lister tous les modeles disponibles"""
         if not cls._loaded:
             cls.load_models()
         
@@ -162,7 +162,7 @@ class ModelsLoader:
 # Fonction publique pour faciliter l'import
 def load_models(force_reload=False):
     """
-    Fonction utilitaire pour charger les modèles BMDB
+    Fonction utilitaire pour charger les modeles BMDB
     
     Usage:
         from bmb import load_models

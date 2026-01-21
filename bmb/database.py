@@ -1,5 +1,5 @@
 """
-Gestionnaire de base de données
+Gestionnaire de base de donnees
 Fonctions utilitaires pour interagir avec BMDB
 """
 
@@ -33,12 +33,12 @@ class Database:
     
     @staticmethod
     def init_db():
-        """Initialiser la base de données (créer les tables)"""
+        """Initialiser la base de donnees (creer les tables)"""
         return ModelsLoader.create_tables()
     
     @staticmethod
     def test_connection():
-        """Tester la connexion à la base de données"""
+        """Tester la connexion à la base de donnees"""
         try:
             engine = ModelsLoader.get_engine()
             with engine.connect() as conn:  # noqa: F841

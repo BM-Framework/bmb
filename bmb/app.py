@@ -1,5 +1,5 @@
 """
-Factory pour créer l'application Flask BMB
+Factory pour creer l'application Flask BMB
 """
 
 from flask import Flask
@@ -13,16 +13,16 @@ from .middleware import setup_logging, register_error_handlers
 
 def create_app(config_class=AppConfig):
     """
-    Factory pour créer l'application BMB
+    Factory pour creer l'application BMB
     
     Args:
         config_class: Classe de configuration à utiliser
         
     Returns:
-        Flask app configurée
+        Flask app configuree
     """
     
-    # Créer l'application Flask
+    # Creer l'application Flask
     app = Flask(__name__)
     app.config.from_object(config_class)
     
@@ -34,23 +34,23 @@ def create_app(config_class=AppConfig):
     # Configurer CORS
     CORS(app, origins=AppConfig.CORS_ORIGINS)
     
-    # Charger les modèles BMDB
-    print("📦 Chargement des modèles BMDB...")
+    # Charger les modeles BMDB
+    print("📦 Chargement des modeles BMDB...")
     models = load_models()
     
-    # Stocker les modèles dans l'app context
+    # Stocker les modeles dans l'app context
     app.bmdb_models = models
     
-    # Initialiser la base de données
+    # Initialiser la base de donnees
     if BMDBConfig.CREATE_TABLES_ON_START:
-        print("🗄️  Initialisation de la base de données...")
+        print("🗄️  Initialisation de la base de donnees...")
         Database.init_db()
     
     # Tester la connexion
     if Database.test_connection():
-        print("✅ Connexion à la base de données établie")
+        print("✅ Connexion à la base de donnees etablie")
     else:
-        print("⚠️  Attention: Impossible de se connecter à la base de données")
+        print("⚠️  Attention: Impossible de se connecter à la base de donnees")
     
     # Configurer le logging
     setup_logging(app)
@@ -62,6 +62,6 @@ def create_app(config_class=AppConfig):
     from .routes import register_routes
     register_routes(app)
     
-    print("✅ Application BMB créée avec succès")
+    print("✅ Application BMB creee avec succes")
     
     return app
