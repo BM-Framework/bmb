@@ -16,7 +16,7 @@ def create_app(config_class=AppConfig):
     Factory pour creer l'application BMB
     
     Args:
-        config_class: Classe de configuration à utiliser
+        config_class: Classe de configuration a utiliser
         
     Returns:
         Flask app configuree
@@ -48,9 +48,9 @@ def create_app(config_class=AppConfig):
     
     # Tester la connexion
     if Database.test_connection():
-        print("✅ Connexion à la base de donnees etablie")
+        print("✅ Connexion a la base de donnees etablie")
     else:
-        print("⚠️  Attention: Impossible de se connecter à la base de donnees")
+        print("⚠️  Attention: Impossible de se connecter a la base de donnees")
     
     # Configurer le logging
     setup_logging(app)

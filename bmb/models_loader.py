@@ -23,7 +23,7 @@ class ModelsLoader:
         Charger les modeles BMDB generes
         
         Args:
-            force_reload: Forcer le rechargement meme si dejà charge
+            force_reload: Forcer le rechargement meme si deja charge
             
         Returns:
             dict: Dictionnaire contenant {Base, engine, SessionLocal, models...}

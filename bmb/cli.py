@@ -55,7 +55,7 @@ class BMBCLI:
         project_path = Path.cwd() / project_name
         
         if project_path.exists():
-            self.print_error(f"Le dossier '{project_name}' existe dejà")
+            self.print_error(f"Le dossier '{project_name}' existe deja")
             return False
         
         try:
@@ -93,7 +93,7 @@ class BMBCLI:
             self._create_project_files(project_path, project_name)
             
             # Final success message
-            self.print_success(f"\n✨ Projet '{project_name}' cree avec succes à partir du template !")
+            self.print_success(f"\n✨ Projet '{project_name}' cree avec succes a partir du template !")
             self._print_next_steps(project_name)
             
             return True
@@ -289,7 +289,7 @@ GET /api/health - Health check
         route_file = routes_dir / f"{model_name.lower()}.py"
         
         if route_file.exists():
-            self.print_warning(f"Le fichier {route_file.name} existe dejà")
+            self.print_warning(f"Le fichier {route_file.name} existe deja")
             overwrite = input("Voulez-vous l'ecraser? (o/N): ").lower()
             if overwrite != 'o':
                 self.print_info("Operation annulee")
@@ -402,7 +402,7 @@ def create_{model_name.lower()}(current_user):
 @{model_name.lower()}_bp.route('/<int:item_id>', methods=['PUT'])
 @JWTManager.token_required
 def update_{model_name.lower()}(current_user, item_id):
-    """Mettre à jour un {model_name}"""
+    """Mettre a jour un {model_name}"""
     try:
         data = request.get_json()
         
@@ -417,7 +417,7 @@ def update_{model_name.lower()}(current_user, item_id):
         if not item:
             return error_response("{model_name} introuvable", 404)
         
-        # Mettre à jour les champs
+        # Mettre a jour les champs
         for key, value in data.items():
             if hasattr(item, key):
                 setattr(item, key, value)
@@ -426,7 +426,7 @@ def update_{model_name.lower()}(current_user, item_id):
         
         return success_response(
             data={{'item': updated_item.to_dict()}},
-            message="{model_name} mis à jour"
+            message="{model_name} mis a jour"
         )
         
     except Exception as e:

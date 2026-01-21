@@ -38,7 +38,7 @@ class Database:
     
     @staticmethod
     def test_connection():
-        """Tester la connexion à la base de donnees"""
+        """Tester la connexion a la base de donnees"""
         try:
             engine = ModelsLoader.get_engine()
             with engine.connect() as conn:  # noqa: F841
