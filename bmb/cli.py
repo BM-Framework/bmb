@@ -155,8 +155,8 @@ flask-cors>=4.0.0
 PyJWT>=2.8.0
 python-dotenv>=1.0.0
 Werkzeug>=3.0.1
-bmdb>=1.2.0
-bmb>=1.0.0
+bmdb
+bmb
 """
             (project_path / "requirements.txt").write_text(requirements_content)
             self.print_success("Cree: requirements.txt")
@@ -215,7 +215,7 @@ nano .env
     ```bash
     # Creer un modele User
 bmdb create-model User
-bmdb add-fields User name String email String --unique email password String
+bmdb add-fields User name String email String --unique email password String age Integer
 
 # Generer les modeles Python
 bmdb generate
@@ -498,7 +498,7 @@ def delete_{model_name.lower()}(current_user, item_id):
         """Afficher les informations sur BMB"""
         self.print_header("BMB Backend Framework")
         
-        print(f"{self.colors.BOLD}Version:{self.colors.ENDC} 1.0.0")
+        print(f"{self.colors.BOLD}Version:{self.colors.ENDC} 1.0.5")
         print(f"{self.colors.BOLD}ORM:{self.colors.ENDC} BMDB")
         print(f"{self.colors.BOLD}Framework:{self.colors.ENDC} Flask")
         
