@@ -2,8 +2,8 @@ import os
 
 parent_dir = r"C:\Users\hp\OneDrive\Desktop\BM\bmb"
 sub_dir    = r"C:\Users\hp\OneDrive\Desktop\BM\bmb\bmb"
-oldV = "1.0.2"
-newV = "1.0.3"
+oldV = "1.0.4"
+newV = "1.0.5"
 skip_file = "chage_fix.py"
 
 # Parent folder: version only, skip chage_e.py

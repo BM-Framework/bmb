@@ -25,16 +25,16 @@ def register_routes(app):
         
         # Afficher le nom du blueprint
         print(f"\n📦 Blueprint: {blueprint.name}")
-        print(f"   Préfixe: {url_prefix}")
+        print(f"   Prefixe: {url_prefix}")
         print("   Routes:")
         
-        # Récupérer toutes les routes du blueprint
+        # Recuperer toutes les routes du blueprint
         routes = []
         for rule in app.url_map.iter_rules():
             if rule.endpoint.startswith(f"{blueprint.name}."):
                 # Extraire le nom de la fonction
                 func_name = rule.endpoint.split('.')[-1]
-                # Extraire les méthodes HTTP
+                # Extraire les methodes HTTP
                 methods = [m for m in rule.methods if m not in ['HEAD', 'OPTIONS']]
                 routes.append({
                     'path': rule.rule,
@@ -42,15 +42,15 @@ def register_routes(app):
                     'function': func_name
                 })
         
-        # Afficher les routes triées
+        # Afficher les routes triees
         for route in sorted(routes, key=lambda x: x['path']):
             methods_str = ', '.join(route['methods'])
             print(f"      [{methods_str:12}] {route['path']:40} → {route['function']}")
     
-    # Résumé final
+    # Resume final
     print("\n" + "=" * 70)
     total_routes = sum(len([r for r in app.url_map.iter_rules() 
                            if r.endpoint.startswith(f"{bp.name}.")]) 
                       for bp, _ in blueprints)
-    print(f"✅ Total: {len(blueprints)} blueprints | {total_routes} endpoints enregistrés")
+    print(f"✅ Total: {len(blueprints)} blueprints | {total_routes} endpoints enregistres")
     print("=" * 70 + "\n")
